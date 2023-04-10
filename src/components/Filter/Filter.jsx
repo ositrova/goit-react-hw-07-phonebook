@@ -1,20 +1,23 @@
 import { Contanier, Input } from './Filter.style';
 
-import { useDispatch } from "react-redux";
-import { setFilter } from 'redux/filterSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectFilter } from 'redux/selectors';
+import { filterContacts } from 'redux/filterSlice';
 
 export const Filter = () => {
   const dispatch = useDispatch();
-  const onChange = event => {
-      const filtered = event.target.value;
-      dispatch(setFilter(filtered));
+  const filter = useSelector(selectFilter);
+
+  const handleChange = e => {
+    dispatch(filterContacts(e.target.value));
   };
   return (
     <Contanier>
       <label htmlFor="">Find contacts by name</label>
       <Input
         name="filter"
-        onChange={onChange}
+        onChange={handleChange}
+        value={filter}
         type="text"
         placeholder="Сontact search ..."
       />

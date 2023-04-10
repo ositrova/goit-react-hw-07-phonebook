@@ -1,39 +1,46 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllContacts, addContact, deleteContact } from "services/api";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://642fead9b289b1dec4bd0be4.mockapi.io/api/v1/';
 
 export const fetchContacts = createAsyncThunk(
-    'contacts/fetchAll',
-    async (_, thunkAPI) => {
-        try {
-            const response = await getAllContacts();
-            return response.data;
-        } catch (err) {
-            return thunkAPI.rejectWithValue(err);
-        }
-    });
+  'contacts/fetchContacts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/contacts');
 
-
-export const addContacts = createAsyncThunk(
-    'contacts/addContacts',
-    async (contact, { thunkAPI, dispatch }) => {
-        try {
-            const response = await addContact(contact);
-            return response.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e.message);
-        }
+      return response.data;
+    } catch (e) {
+      return rejectWithValue(e.message);
     }
+  }
 );
 
-export const deleteContacts = createAsyncThunk(
-    '/contacts/deleteContacts',
+export const addContact = createAsyncThunk(
+  'contacts/addContact',
+  async ({ name, number }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/contacts', {
+        name,
+        number,
+      });
 
-    async (id, { thunkAPI, dispatch }) => {
-        try {
-            const response = await deleteContact(id);
-            return response.data;
-        } catch (e) {
-            return thunkAPI.rejectWithValue(e.message);
-        }
+      return response.data;
+    } catch (e) {
+      return rejectWithValue(e.message);
     }
+  }
+);
+
+export const deleteContact = createAsyncThunk(
+  'contacts/deleteContact',
+  async (contactId, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/contacts/${contactId}`);
+
+      return response.data;
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
 );

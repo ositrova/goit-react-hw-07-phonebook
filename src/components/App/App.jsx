@@ -6,38 +6,33 @@ import { Filter } from "../Filter/Filter";
 import {PhoneForm} from "../PhoneForm/PhoneForm";
 import { PhoneList } from "../PhoneList/PhoneList";
 import {Phonebook, Contacts} from './App.style'
+import { Loader } from "components/Loader/Loader";
 
-import { useSelector } from 'react-redux';
-import { useDispatch, } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
-
+import { selectIsLoading } from 'redux/selectors';
+import { selectError } from 'redux/selectors';
 
 export const App = () => {
-  const contactsFromStore = useSelector(state => state.contacts.contacts.items);
-  const filterFromStore = useSelector(state => state.filter);
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const getFilterContacts = () => {
-    return contactsFromStore.filter(el =>
-      el.name.toLowerCase().includes(filterFromStore.toLowerCase())
-    );
-  };
+  
 
   return (
     <Layout>
 <Phonebook>Phonebook</Phonebook>
-<PhoneForm 
-contacts={contactsFromStore}
-filterContacts={getFilterContacts()}/>
+<PhoneForm />
 
 <Contacts>Contacts</Contacts>
 <Filter  />
-
+{isLoading && !error && <Loader/>}
 <PhoneList/>
 
       <GlobalStyle/>
