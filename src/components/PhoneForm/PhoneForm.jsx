@@ -22,7 +22,7 @@ export const PhoneForm = () => {
   
     const handleFormSubmit = e => {
       e.preventDefault();
-      const form = e.currentTarget;
+      
         const contactsLists = [...items];
       if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
         alert(`${name} is already in contacts.`);
